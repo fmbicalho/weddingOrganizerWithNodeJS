@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Guests</title>
+    <script src="https://kit.fontawesome.com/b9d366632a.js" crossorigin="anonymous"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        h1 {
+            color: #007bff;
+            margin: 40px 0;
+            text-align: center;
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .card {
+            margin: 10px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .status-confirmed {
+            background-color: #d4edda; /* Light green */
+            color: #155724; /* Dark green */
+        }
+        .status-pending {
+            background-color: #fff3cd; /* Light yellow */
+            color: #856404; /* Dark yellow */
+        }
+        .status-invited {
+            background-color: #f8d7da; /* Light red */
+            color: #721c24; /* Dark red */
+        }
+        .back-button {
+        margin-top: 10px;
+        text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/"><i class="fa-solid fa-champagne-glasses"></i> Wedding Organizer</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/guests">Guests</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/gifts">Gifts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/finances">Finances</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/staff">Staff</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/locations">Locations</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <h1 class="text-center my-4">Guest List</h1>
+    <div class="container">
+        <div class="row">
+            <!-- Guest List Card -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Guest List</h5>
+                        <div class="list-group guest-list">
+                            <% guests.forEach(guest => { %>
+                                <a href="#" class="list-group-item list-group-item-action <%= guest.status === 'Confirmed' ? 'status-confirmed' : guest.status === 'Pending' ? 'status-pending' : 'status-invited' %>">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <div>
+                                            <strong><%= guest.firstName %> <%= guest.lastName %></strong><br>
+                                            <span><%= guest.relation %></span>
+                                        </div>
+                                        <div>
+                                            <span><%= guest.status %></span>
+                                            <button class="btn btn-primary btn-sm ml-2" onclick="editGuest(<%= guest.id %>)">Edit</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteGuest(<%= guest.id %>)">Delete</button>
+                                        </div>
+                                    </div>
+                                </a>
+                            <% }); %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add/Edit Guest Form Card -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Add/Edit Guest</h5>
+                        <form id="guestForm">
+                            <div class="mb-3">
+                                <label for="firstName" class="form-label">First Name</label>
+                                <input type="text" class="form-control" id="firstName" name="firstName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="lastName" class="form-label">Last Name</label>
+                                <input type="text" class="form-control" id="lastName" name="lastName" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="relation" class="form-label">Relation</label>
+                                <input type="text" class="form-control" id="relation" name="relation" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="status" class="form-label">Status</label>
+                                <input type="text" class="form-control" id="status" name="status" required>
+                            </div>
+                            <input type="hidden" id="guestId" name="guestId">
+                            <button type="submit" class="btn btn-primary">Save Guest</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="back-button text-end">
+                    <button class="btn btn-secondary" onclick="window.location.href='/'">Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('guestForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const id = formData.get('guestId');
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/guests/${id}` : '/guests';
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData)),
+            })
+            .then(response => response.json())
+            .then(data => {
+                location.reload(); // Reload the page to see updated list
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        function editGuest(id) {
+            fetch(`/guests/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('firstName').value = data.firstName;
+                    document.getElementById('lastName').value = data.lastName;
+                    document.getElementById('relation').value = data.relation;
+                    document.getElementById('status').value = data.status;
+                    document.getElementById('guestId').value = data.id;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function deleteGuest(id) {
+            if (confirm('Are you sure you want to delete this guest?')) {
+                fetch(`/guests/${id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    location.reload(); // Reload the page to see updated list
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+</body>
+</html>
