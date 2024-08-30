@@ -4,6 +4,8 @@ import express from "express";
 import guestRouter from "./guest/guest.router.js";
 import giftRouter from "./gift/gift.router.js";
 import financeRouter from "./finance/finance.router.js";
+import locationRouter from "./location/location.router.js";
+import staffRouter from "./staff/staff.router.js";
 
 import cors from "cors";
 import path from "path";
@@ -12,6 +14,8 @@ import url from "url"; // Import the url module
 import Guest from "./guest/guest.js";
 import Gift from "./gift/gift.js";
 import Finance from "./finance/finance.js";
+import Location from "./location/location.js";
+import Staff from "./staff/staff.js";
 
 const PORT = process.env.SERVER_PORT || 3000;
 const app = express();
@@ -102,10 +106,32 @@ app.get("/finances", async (req, res) => {
   }
 });
 
+app.get("/locations", async (req, res) => {
+  try {
+    const locations = await Location.query();
+    res.render("location", { locations });
+  } catch (error) {
+    console.error("Error fetching locations: ", error);
+    res.status(500).send("Error fetching locations");
+  }
+});
+
+app.get("/staff", async (req, res) => {
+  try {
+    const staff = await Staff.query();
+    res.render("staff", { staff });
+  } catch (error) {
+    console.error("Error fetching staff: ", error);
+    res.status(500).send("Error fetching staff");
+  }
+});
+
 // API routes
 app.use("/api", guestRouter);
 app.use("/api", giftRouter);
 app.use("/api", financeRouter);
+app.use("/api", locationRouter);
+app.use("/api", staffRouter);
 
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);

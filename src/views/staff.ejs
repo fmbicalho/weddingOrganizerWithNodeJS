@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Staff</title>
+    <script src="https://kit.fontawesome.com/b9d366632a.js" crossorigin="anonymous"></script>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.min.js" integrity="sha384-0pUGZvbkm6XF6gxjEnlmuGrJXVbNuzT9qBBavbLwCsOGabYfZo0T0to5eqruptLy" crossorigin="anonymous"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        h1 {
+            color: #007bff;
+            margin: 40px 0;
+            text-align: center;
+        }
+        .navbar-brand {
+            font-size: 24px;
+            font-weight: bold;
+        }
+        .card {
+            margin: 10px 0;
+            border-radius: 15px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .back-button {
+            margin-top: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="/"><i class="fa-solid fa-champagne-glasses"></i> Wedding Organizer</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav">
+                        <li class="nav-item"><a class="nav-link" href="/">Home</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/guests">Guests</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/gifts">Gifts</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/finances">Finances</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/staff">Staff</a></li>
+                        <li class="nav-item"><a class="nav-link" href="/locations">Locations</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <h1 class="text-center my-4">Staff List</h1>
+    <div class="container">
+        <div class="row">
+            <!-- Staff List Card -->
+            <div class="col-md-8">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Staff List</h5>
+                        <div class="list-group staff-list">
+                            <% staff.forEach(staffMember => { %>
+                                <a href="#" class="list-group-item list-group-item-action">
+                                    <div class="d-flex w-100 justify-content-between">
+                                        <div>
+                                            <strong><%= staffMember.company %></strong><br>
+                                            <span>Description: <%= staffMember.description %></span><br>
+                                            <span>Value: <%= staffMember.value %></span><br>
+                                            <span>Amount Payed: <%= staffMember.amount_payed %></span><br>
+
+                                        </div>
+                                        <div>
+                                            <button class="btn btn-primary btn-sm ml-2" onclick="editStaff(<%= staffMember.id %>)">Edit</button>
+                                            <button class="btn btn-danger btn-sm" onclick="deleteStaff(<%= staffMember.id %>)">Delete</button>
+                                        </div>
+                                    </div>
+                                </a>
+                            <% }); %>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Add/Edit Staff Form Card -->
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Add/Edit Staff</h5>
+                        <form id="staffForm">
+                            <div class="mb-3">
+                                <label for="company" class="form-label">Company</label>
+                                <input type="text" class="form-control" id="company" name="company" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="description" class="form-label">Description</label>
+                                <input type="text" class="form-control" id="description" name="description" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="value" class="form-label">Value</label>
+                                <input type="number" class="form-control" id="value" name="value" required>
+                            </div>
+                            <div class="mb-3">
+                                <label for="amount_payed" class="form-label">Amount Payed</label>
+                                <input type="number" class="form-control" id="amount_payed" name="amount_payed" required>
+                            </div>
+
+                            <input type="hidden" id="staffId" name="staffId">
+                            <button type="submit" class="btn btn-primary">Save Staff</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="back-button text-end">
+                    <button class="btn btn-secondary" onclick="window.location.href='/'">Back to Home</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and dependencies -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <script>
+        document.getElementById('staffForm').addEventListener('submit', function(event) {
+            event.preventDefault();
+            const formData = new FormData(event.target);
+            const id = formData.get('staffId');
+            const method = id ? 'PUT' : 'POST';
+            const url = id ? `/staff/${id}` : '/staff';
+
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(Object.fromEntries(formData)),
+            })
+            .then(response => response.json())
+            .then(data => {
+                location.reload(); // Reload the page to see updated list
+            })
+            .catch(error => console.error('Error:', error));
+        });
+
+        function editStaff(id) {
+            fetch(`/staff/${id}`)
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementById('company').value = data.company;
+                    document.getElementById('description').value = data.description;
+                    document.getElementById('value').value = data.value;
+                    document.getElementById('amount_payed').value = data.amount_payed;
+                    document.getElementById('location_id').value = data.location_id;
+                    document.getElementById('staffId').value = data.id;
+                })
+                .catch(error => console.error('Error:', error));
+        }
+
+        function deleteStaff(id) {
+            if (confirm('Are you sure you want to delete this staff member?')) {
+                fetch(`/staff/${id}`, {
+                    method: 'DELETE',
+                })
+                .then(response => response.json())
+                .then(data => {
+                    location.reload(); // Reload the page to see updated list
+                })
+                .catch(error => console.error('Error:', error));
+            }
+        }
+    </script>
+</body>
+</html>
